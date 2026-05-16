@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/mcp-config.schema.json",
+  "_comment": "AMRIT AI Framework MCP Configuration. Add this to ~/.claude/claude_desktop_config.json or your Cursor MCP config.",
+  "mcpServers": {
+    "amrit-docs": {
+      "command": "node",
+      "args": ["PATH_TO_FRAMEWORK/mcp-servers/amrit-docs-server/dist/index.js"],
+      "env": {
+        "AMRIT_DOCS_INDEX_PATH": "PATH_TO_FRAMEWORK/data/docs-index",
+        "AMRIT_DOCS_REPOS": "PSMRI/AMRIT,PSMRI/HWC-API,PSMRI/Helpline104-API,PSMRI/TM-API,PSMRI/MMU-API,PSMRI/AMRIT-Mobile",
+        "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN"
+      },
+      "description": "Searches indexed AMRIT documentation from all PSMRI repos"
+    },
+    "amrit-jira": {
+      "command": "node",
+      "args": ["PATH_TO_FRAMEWORK/mcp-servers/jira-server/dist/index.js"],
+      "env": {
+        "JIRA_BASE_URL": "https://your-org.atlassian.net",
+        "JIRA_EMAIL": "your@email.com",
+        "JIRA_API_TOKEN": "YOUR_JIRA_TOKEN"
+      },
+      "description": "AMRIT JIRA integration — search, create, and manage tickets"
+    },
+    "amrit-confluence": {
+      "command": "node",
+      "args": ["PATH_TO_FRAMEWORK/mcp-servers/confluence-server/dist/index.js"],
+      "env": {
+        "CONFLUENCE_BASE_URL": "https://your-org.atlassian.net/wiki",
+        "CONFLUENCE_EMAIL": "your@email.com",
+        "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_TOKEN",
+        "CONFLUENCE_SPACES": "AMRIT,DEV,OPS"
+      },
+      "description": "Reads AMRIT Confluence docs, BRDs, and concept notes"
+    },
+    "amrit-code-context": {
+      "command": "node",
+      "args": ["PATH_TO_FRAMEWORK/mcp-servers/code-context-server/dist/index.js"],
+      "env": {
+        "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN",
+        "GITHUB_ORG": "PSMRI"
+      },
+      "description": "Cross-repo AMRIT code search and API endpoint discovery"
+    }
+  }
+}

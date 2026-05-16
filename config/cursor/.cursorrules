@@ -1,0 +1,70 @@
+# AMRIT Project — Cursor Rules
+
+You are an expert developer working on the AMRIT open-source EHR platform by
+Piramal Swasthya. Always apply AMRIT's specific conventions.
+
+## Project Context
+
+AMRIT is an Indian public health EHR with 10+ repositories:
+- Java/Spring Boot backends: HWC-API, Helpline104-API, TM-API, MMU-API
+- Angular frontends: HWC-UI, Helpline104-UI, TM-UI, MMU-UI
+- Kotlin/Android: AMRIT-Mobile (ASHA companion app)
+- Core: AMRIT repo (shared auth, utilities)
+
+## Java/Spring Boot Rules
+
+1. **Package structure**: `com.iemr.<service>/controller/`, `service/`, `repo/`, `model/db/`, `model/response/`
+2. **Controllers are thin**: All business logic in service layer, never in controllers
+3. **Service pattern**: Interface + `ServiceImpl` class
+4. **Error handling**: Wrap all service methods in try-catch, throw `AMRITException`, log at ERROR level
+5. **Entities**: Always include `deleted`, `createdBy`, `createdDate`, `modifiedBy`, `lastModDate`
+6. **Soft-delete**: Always filter `WHERE deleted = false` in queries
+7. **Logger**: `LoggerFactory.getLogger(this.getClass().getName())` — never static, never `System.out.println`
+8. **Serialization**: Use `InputMapper.gson()` for deserialization, `new Gson()` for serialization
+9. **No Lombok**: Use explicit getters/setters
+10. **No PII in logs**: Never log patient names, phone numbers, or Aadhar
+
+## Angular Rules
+
+1. **Standalone components** for Angular 17+; NgModule for legacy (14 and below)
+2. **Reactive Forms only** — no template-driven forms
+3. **Services**: `providedIn: 'root'`, no business logic in templates
+4. **RxJS**: Always unsubscribe — use `takeUntil(destroy$)` pattern; null binding in `ngOnDestroy`
+5. **No hardcoded URLs**: Use `environment.ts`
+6. **HTTP auth**: JWT added automatically by `AuthInterceptor`; don't manually set headers
+7. **Angular Material**: Only UI library allowed
+8. **TypeScript strict**: No `any`, mark injected deps as `readonly`
+
+## Kotlin/Android Rules
+
+1. **MVVM + Hilt**: `@HiltViewModel`, `@AndroidEntryPoint`
+2. **StateFlow** for UI state (not LiveData): sealed class with Idle/Loading/Success/Error
+3. **Offline-first**: Save to Room DB before/on API failure; `isSynced` column
+4. **WorkManager** for background sync: constrain to `NetworkType.CONNECTED`
+5. **ViewBinding**: Null in `onDestroyView()` to prevent leaks
+6. **Coroutines**: `viewModelScope` for ViewModel, `viewLifecycleOwner.lifecycleScope` for Fragments
+7. **Repository pattern**: Returns `Result<T>`, never raw Retrofit Response
+
+## Key Domain Terms
+
+- Beneficiary = patient/citizen
+- BeneficiaryRegID = unique AMRIT patient ID
+- HWC = Health and Wellness Centre
+- 104 = government medical helpline
+- ASHA = community health worker
+- MMU = Mobile Medical Unit
+
+## API Format
+
+All AMRIT APIs:
+- Path: `/api/v1/<module>/<action>`
+- Require `Authorization` header (JWT)
+- Success: `{"data": {...}, "statusCode": 200, "status": "Success"}`
+- Error: `{"statusCode": 5000, "errorMessage": "...", "status": "failure"}`
+
+## When Writing Code
+
+- Match the existing patterns in the file you're editing
+- Do not introduce new frameworks or libraries without checking
+- Write tests for every new service method (JUnit 5 + Mockito for Java)
+- Reference AMRIT coding standards: `coding-standards/spring-boot.md`, `angular.md`, `kotlin-android.md`

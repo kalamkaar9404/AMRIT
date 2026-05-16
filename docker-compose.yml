@@ -1,0 +1,80 @@
+version: "3.8"
+
+# AMRIT AI Framework — Docker Compose
+# Runs all MCP servers as HTTP-mode services.
+# For standard Claude Code / Cursor use, you don't need Docker —
+# the servers run as stdio processes. Use this for shared team deployments.
+
+services:
+  amrit-docs-server:
+    build:
+      context: ./mcp-servers/amrit-docs-server
+      dockerfile: Dockerfile
+    container_name: amrit-docs-server
+    ports:
+      - "${DOCS_SERVER_PORT:-3001}:3001"
+    volumes:
+      - ./data/docs-index:/data/docs-index
+    environment:
+      - AMRIT_DOCS_INDEX_PATH=/data/docs-index
+      - AMRIT_DOCS_REPOS=${AMRIT_DOCS_REPOS}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    restart: unless-stopped
+
+  amrit-jira-server:
+    build:
+      context: ./mcp-servers/jira-server
+      dockerfile: Dockerfile
+    container_name: amrit-jira-server
+    ports:
+      - "${JIRA_SERVER_PORT:-3003}:3003"
+    environment:
+      - JIRA_BASE_URL=${JIRA_BASE_URL}
+      - JIRA_EMAIL=${JIRA_EMAIL}
+      - JIRA_API_TOKEN=${JIRA_API_TOKEN}
+    restart: unless-stopped
+
+  amrit-confluence-server:
+    build:
+      context: ./mcp-servers/confluence-server
+      dockerfile: Dockerfile
+    container_name: amrit-confluence-server
+    ports:
+      - "${CONFLUENCE_SERVER_PORT:-3002}:3002"
+    environment:
+      - CONFLUENCE_BASE_URL=${CONFLUENCE_BASE_URL}
+      - CONFLUENCE_EMAIL=${CONFLUENCE_EMAIL}
+      - CONFLUENCE_API_TOKEN=${CONFLUENCE_API_TOKEN}
+      - CONFLUENCE_SPACES=${CONFLUENCE_SPACES}
+    restart: unless-stopped
+
+  amrit-code-context-server:
+    build:
+      context: ./mcp-servers/code-context-server
+      dockerfile: Dockerfile
+    container_name: amrit-code-context-server
+    ports:
+      - "${CODE_CONTEXT_SERVER_PORT:-3004}:3004"
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_ORG=${GITHUB_ORG:-PSMRI}
+    restart: unless-stopped
+
+  # Optional: run the indexer on a schedule
+  amrit-indexer:
+    build:
+      context: ./mcp-servers/amrit-docs-server
+      dockerfile: Dockerfile
+    container_name: amrit-indexer
+    volumes:
+      - ./data/docs-index:/data/docs-index
+    environment:
+      - AMRIT_DOCS_INDEX_PATH=/data/docs-index
+      - AMRIT_DOCS_REPOS=${AMRIT_DOCS_REPOS}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    command: ["node", "dist/indexer.js"]
+    profiles:
+      - indexer
+
+volumes:
+  docs-index:

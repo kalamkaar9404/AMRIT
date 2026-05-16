@@ -1,0 +1,31 @@
+{
+  "name": "amrit-ai-framework",
+  "version": "0.1.0",
+  "description": "Agentic AI framework for the AMRIT open-source EHR platform",
+  "private": true,
+  "workspaces": [
+    "mcp-servers/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:docs": "npm run build --workspace=mcp-servers/amrit-docs-server",
+    "build:confluence": "npm run build --workspace=mcp-servers/confluence-server",
+    "build:jira": "npm run build --workspace=mcp-servers/jira-server",
+    "build:code-context": "npm run build --workspace=mcp-servers/code-context-server",
+    "start:docs-server": "node mcp-servers/amrit-docs-server/dist/index.js",
+    "start:confluence-server": "node mcp-servers/confluence-server/dist/index.js",
+    "start:jira-server": "node mcp-servers/jira-server/dist/index.js",
+    "start:code-context-server": "node mcp-servers/code-context-server/dist/index.js",
+    "index:docs": "node mcp-servers/amrit-docs-server/dist/indexer.js",
+    "lint": "eslint \"mcp-servers/*/src/**/*.ts\"",
+    "typecheck": "tsc --noEmit --project mcp-servers/amrit-docs-server/tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  }
+}
