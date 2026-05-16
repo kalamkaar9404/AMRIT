@@ -140,20 +140,10 @@ cp config/copilot/.github/copilot-instructions.md /path/to/your/amrit-repo/.gith
 - GitHub Copilot (via `copilot-instructions.md`)
 - Gemini Code Assist (via project context files)
 
-## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/contributing-guide.md](docs/contributing-guide.md).
-
-Good first contributions:
-- Add a new MCP server (Slack, SonarQube, GitHub Actions)
-- Write a skill for a new SDLC phase
-- Expand coding standards for a specific AMRIT module
-- Add IDE-specific configuration
 
 ## License
 
 MIT — see [LICENSE](LICENSE)
 
-## Maintained by
 
-PSMRI / C4GT open-source contributors. Mentor: @drtechie
